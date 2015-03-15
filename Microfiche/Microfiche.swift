@@ -12,7 +12,7 @@ import Foundation
 ///
 /// :param: collection A Swift Collection (Array<T>, Dictionary<T,U>)
 /// :param: atPath A valid path hopefully in the app sandbox
-/// 
+///
 /// :returns: true if the operation was successful, false if not
 ///
 public func archiveCollection<T: CollectionType>(collection: T, atPath path: String) -> Bool {
@@ -26,13 +26,13 @@ public func archiveCollection<T: CollectionType>(collection: T, atPath path: Str
 /// Restores a Collection which has been previously archived at a given path
 ///
 /// Note this method is overloaded on the return type, and uses return type type inference, be sure to assign the result to the correctly shaped collection
-/// 
+///
 /// :param: path A path which points to an archive
-/// 
+///
 /// :returns: A collection of objects, or nil if an error occurs
-/// 
+///
 public func restoreCollectionFromPath<T>(path: String) -> Array<T>?{
-    let data = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as NSMutableArray?
+    let data = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as! NSMutableArray?
     switch data {
     case .Some(let theData): return restoreFromArchiveArray(theData)
     case .None: return nil
@@ -48,7 +48,23 @@ public func restoreCollectionFromPath<T>(path: String) -> Array<T>?{
 /// :returns: A collection of objects, or nil if an error occurs
 /// 
 public func restoreCollectionFromPath<T,U>(path: String) -> Dictionary<T,U>?{
-    let data = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as NSMutableArray?
+    let data = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as! NSMutableArray?
+    switch data {
+    case .Some(let theData): return restoreFromArchiveArray(theData)
+    case .None: return nil
+    }
+}
+
+/// Restores a Collection which has been previously archived at a given path
+///
+/// Note this method is overloaded on the return type, and uses return type type inference, be sure to assign the result to the correctly shaped collection
+///
+/// :param: path A path which points to an archive
+///
+/// :returns: A collection of objects, or nil if an error occurs
+///
+public func restoreCollectionFromPath<T>(path: String) -> Set<T>?{
+    let data = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as! NSMutableArray?
     switch data {
     case .Some(let theData): return restoreFromArchiveArray(theData)
     case .None: return nil
@@ -84,6 +100,16 @@ public func restoreFromArchiveArray<T>( array: NSMutableArray) -> Array<T>{
 ///
 /// :param: array An NSMutableArray, returned by the NSKeyedUnarchiver
 ///
+/// :returns: An Set of your given type. The data that was originally archived
+///
+public func restoreFromArchiveArray<T>(array: NSMutableArray) -> Set<T> {
+    return Set<T>( map( array ) { memoryOfType(fromAnyObject: $0) } as [T] )
+}
+
+/// This function takes an archive (NSMutableArray) which you will get back from an NSKeyedUnarchiver
+///
+/// :param: array An NSMutableArray, returned by the NSKeyedUnarchiver
+///
 /// :returns: A Dictionary of your given type. The data that was originally archived
 ///
 public func restoreFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,U>{
@@ -103,7 +129,7 @@ public func restoreFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,
 /// see `restoreDictFromArchiveArray` for an example
 ///
 private func memoryOfType<T>(fromAnyObject obj: AnyObject) -> T {
-    let mutableData = obj as NSData
+    let mutableData = obj as! NSData
     var itemData = UnsafeMutablePointer<T>.alloc(sizeof(T))
     mutableData.getBytes(itemData, length: sizeof(T))
     return itemData.memory

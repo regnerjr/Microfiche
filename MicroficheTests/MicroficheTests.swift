@@ -25,6 +25,7 @@ extension Person: Equatable {}
 func ==(rhs: Person, lhs: Person) -> Bool{
     return (rhs.name == lhs.name) && (rhs.age == lhs.age)
 }
+
 // Person Must be hashable to be used in a set
 extension Person : Hashable {
     var hashValue: Int {
@@ -63,7 +64,20 @@ class microficheTests: XCTestCase {
 
         let dictionaryUnarchive = NSKeyedUnarchiver.unarchiveObjectWithData(dictionaryArchive) as? NSMutableArray
         let restoredDictionary = restoreFromArchiveArray(dictionaryUnarchive!) as Dictionary<NSUUID, Person>
-        XCTAssert(restoredDictionary == dictionaryPeeps, "Restored Set is equal to the Source Data")
+        XCTAssert(restoredDictionary == dictionaryPeeps, "Restored Dictionary is equal to the Source Data")
+    }
+
+    func testSetArchiveAndRestore(){
+
+        let me = Person(name: "John", age: 30)
+        let shelby = Person(name: "Shelby", age: 31)
+        let setPeeps: Set<Person> = [me, shelby]
+
+        let setArchive = NSKeyedArchiver.archivedDataWithRootObject(convertCollectionToArrayOfData(setPeeps))
+
+        let setUnarchive = NSKeyedUnarchiver.unarchiveObjectWithData(setArchive) as? NSMutableArray
+        let restoredSet = restoreFromArchiveArray(setUnarchive!) as Set<Person>
+        XCTAssert(restoredSet == setPeeps, "Restored Set is equal to the Source Data")
     }
 
     func testArchiveCollectionAtPath_Array(){
@@ -80,6 +94,7 @@ class microficheTests: XCTestCase {
 
         }
     }
+
     func testRestoreFromPathWhereNoDataHasBeenSaved_Array(){
         let collection: Array<Person>? = restoreCollectionFromPath("someInvalidPath")
         XCTAssert(collection == nil, "restoringCollectionfromPath returns nil")
@@ -105,5 +120,21 @@ class microficheTests: XCTestCase {
         XCTAssert(collection == nil, "restoringCollectionfromPath returns nil")
     }
 
+    func testArchiveCollectionAtPath_Set(){
+        let me = Person(name: "John", age: 30)
+        let shelby = Person(name: "Shelby", age: 31)
+        let setPeeps: Set<Person> = [me, shelby]
+
+        if let path = Archive.path {
+
+            println("Got a good archivePath: \(path)")
+            let result = archiveCollection(setPeeps, atPath: path)
+            XCTAssert(result == true, "Collection setPeeps was sucessfully archived")
+
+            let collection: Set<Person>? = restoreCollectionFromPath(path)
+            XCTAssert(collection! == setPeeps, "Collection setPeeps was successfully restored")
+
+        }
+    }
 
 }
