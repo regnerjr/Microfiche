@@ -41,19 +41,6 @@ class microficheTests: XCTestCase {
         XCTAssert(restoredArray == people, "Restored Array is equal to the Source Data")
     }
 
-    func testSetArchiveAndRestore(){
-
-        let me = Person(name: "John", age: 30)
-        let shelby = Person(name: "Shelby", age: 31)
-        let set: Set<Person> = [me, shelby]
-
-        let setArchive = NSKeyedArchiver.archivedDataWithRootObject(convertCollectionToArrayOfData(set))
-
-        let setUnarchive = NSKeyedUnarchiver.unarchiveObjectWithData(setArchive) as? NSMutableArray
-        let restoredSet = restoreSetFromArchiveArray(setUnarchive!) as Set<Person>
-        XCTAssert(restoredSet == set, "Restored Set is equal to the Source Data")
-    }
-
     func testDictionaryArchiveAndRestore(){
 
         let me = Person(name: "John", age: 30)

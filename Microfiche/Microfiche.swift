@@ -33,13 +33,6 @@ func restoreArrayFromArchiveArray<T>( array: NSMutableArray) -> Array<T>{
 /**
 */
 public
-func restoreSetFromArchiveArray<T>(array: NSMutableArray) -> Set<T> {
-    return Set<T>( map( array ) { memoryOfType(fromAnyObject: $0) } as [T] )
-}
-
-/**
-*/
-public
 func restoreDictFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,U>{
     var results = Dictionary<T,U>()
     map(array){ item -> Void in
@@ -60,7 +53,7 @@ func restoreDictFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,U>{
 
 private
 func memoryOfType<T>(fromAnyObject obj: AnyObject) -> T {
-    let mutableData = obj as! NSData
+    let mutableData = obj as NSData
     var itemData = UnsafeMutablePointer<T>.alloc(sizeof(T))
     mutableData.getBytes(itemData, length: sizeof(T))
     return itemData.memory
