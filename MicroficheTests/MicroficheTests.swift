@@ -74,7 +74,15 @@ class microficheTests: XCTestCase {
             println("Got a good archivePath: \(path)")
             let result = archiveCollection(people, atPath: path)
             XCTAssert(result == true, "Collection people was sucessfully archived")
+
+            let collection: Array<Person>? = restoreCollectionFromPath(path)
+            XCTAssert(collection! == people, "Collection People was successfully restored")
+
         }
+    }
+    func testRestoreFromPathWhereNoDataHasBeenSaved(){
+        let collection: Array<Person>? = restoreCollectionFromPath("someInvalidPath")
+        XCTAssert(collection == nil, "restoringCollectionfromPath returns nil")
     }
 
 }
