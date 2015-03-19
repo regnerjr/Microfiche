@@ -66,7 +66,7 @@ class microficheTests: XCTestCase {
         XCTAssert(restoredDictionary == dictionaryPeeps, "Restored Set is equal to the Source Data")
     }
 
-    func testArchiveCollectionAtPath(){
+    func testArchiveCollectionAtPath_Array(){
         let me = Person(name: "John", age: 30)
         let shelby = Person(name: "Shelby", age: 31)
         let people = [me, shelby]
@@ -80,9 +80,30 @@ class microficheTests: XCTestCase {
 
         }
     }
-    func testRestoreFromPathWhereNoDataHasBeenSaved(){
+    func testRestoreFromPathWhereNoDataHasBeenSaved_Array(){
         let collection: Array<Person>? = restoreCollectionFromPath("someInvalidPath")
         XCTAssert(collection == nil, "restoringCollectionfromPath returns nil")
     }
+
+
+    func testArchiveCollectionAtPath_Dictionary(){
+        let me = Person(name: "John", age: 30)
+        let shelby = Person(name: "Shelby", age: 31)
+        let peopleDict = [NSUUID(): me, NSUUID():shelby]
+        if let path = Archive.path {
+            println("Got a good archivePath: \(path)")
+            let result = archiveCollection(peopleDict, atPath: path)
+            XCTAssert(result == true, "Collection people was sucessfully archived")
+
+            let collection: Dictionary<NSUUID,Person>? = restoreCollectionFromPath(path)
+            XCTAssert(collection! == peopleDict, "Collection People was successfully restored")
+
+        }
+    }
+    func testRestoreFromPathWhereNoDataHasBeenSaved_Dictionary(){
+        let collection: Dictionary<NSUUID,Person>? = restoreCollectionFromPath("someInvalidPath")
+        XCTAssert(collection == nil, "restoringCollectionfromPath returns nil")
+    }
+
 
 }
