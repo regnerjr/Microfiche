@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+set -o pipefail
+pwd
+sim='iphonesimulator'
+flags=" -sdk ${sim}"
+xcodebuild test ${flags} -project Microfiche.xcodeproj -scheme Microfiche
+echo "Done"
