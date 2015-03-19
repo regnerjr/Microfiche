@@ -8,6 +8,18 @@ struct Person {
     let age: Int
 }
 
+private struct Archive {
+    static var path: String? {
+        let documentsDirectories = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true) as? [String]
+        let documentDirectory = documentsDirectories?.first
+        if let dir = documentDirectory {
+            let documentPath = dir + "/items.archive"
+            return documentPath
+        }
+        return nil
+    }
+}
+
 // Person needs to be equatable in order to be used in a Set
 extension Person: Equatable {}
 func ==(rhs: Person, lhs: Person) -> Bool{
@@ -53,5 +65,16 @@ class microficheTests: XCTestCase {
         let restoredDictionary = restoreFromArchiveArray(dictionaryUnarchive!) as Dictionary<NSUUID, Person>
         XCTAssert(restoredDictionary == dictionaryPeeps, "Restored Set is equal to the Source Data")
     }
-    
+
+    func testArchiveCollectionAtPath(){
+        let me = Person(name: "John", age: 30)
+        let shelby = Person(name: "Shelby", age: 31)
+        let people = [me, shelby]
+        if let path = Archive.path {
+            println("Got a good archivePath: \(path)")
+            let result = archiveCollection(people, atPath: path)
+            XCTAssert(result == true, "Collection people was sucessfully archived")
+        }
+    }
+
 }
