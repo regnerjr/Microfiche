@@ -26,14 +26,14 @@ func convertCollectionToArrayOfData<T: CollectionType>(collection: T) -> NSMutab
 /**
 */
 public
-func restoreArrayFromArchiveArray<T>( array: NSMutableArray) -> Array<T>{
+func restoreFromArchiveArray<T>( array: NSMutableArray) -> Array<T>{
     return Array<T>( map( array ) { memoryOfType(fromAnyObject: $0) } )
 }
 
 /**
 */
 public
-func restoreDictFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,U>{
+func restoreFromArchiveArray<T,U>(array: NSMutableArray) -> Dictionary<T,U>{
     var results = Dictionary<T,U>()
     map(array){ item -> Void in
         let (k,v): (T,U)  = memoryOfType(fromAnyObject: item)

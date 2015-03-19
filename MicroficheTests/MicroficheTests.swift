@@ -37,7 +37,7 @@ class microficheTests: XCTestCase {
         // Finally take the Restored NSMutableArray, and convert it back to our preferred Data type
         // NOTE: The cast is required! Without this the Type Inference Engine will not know what type
         // of object should be returned to you
-        let restoredArray = restoreArrayFromArchiveArray(arayUnarchive!) as Array<Person>
+        let restoredArray = restoreFromArchiveArray(arayUnarchive!) as Array<Person>
         XCTAssert(restoredArray == people, "Restored Array is equal to the Source Data")
     }
 
@@ -50,7 +50,7 @@ class microficheTests: XCTestCase {
         let dictionaryArchive = NSKeyedArchiver.archivedDataWithRootObject(convertCollectionToArrayOfData(dictionaryPeeps))
 
         let dictionaryUnarchive = NSKeyedUnarchiver.unarchiveObjectWithData(dictionaryArchive) as? NSMutableArray
-        let restoredDictionary = restoreDictFromArchiveArray(dictionaryUnarchive!) as Dictionary<NSUUID, Person>
+        let restoredDictionary = restoreFromArchiveArray(dictionaryUnarchive!) as Dictionary<NSUUID, Person>
         XCTAssert(restoredDictionary == dictionaryPeeps, "Restored Set is equal to the Source Data")
     }
     
