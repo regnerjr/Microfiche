@@ -3,5 +3,6 @@ set -o pipefail
 pwd
 sim='iphonesimulator'
 flags=" -sdk ${sim}"
-xcodebuild test ${flags} -project Microfiche.xcodeproj -scheme Microfiche
+projScheme="-project Microfiche.xcodeproj -scheme Microfiche"
+xcodebuild ${flags} ${projScheme} -destination 'platform=iOS Simulator,name=iPhone 6 Plus' test
 echo "Done"
