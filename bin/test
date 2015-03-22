@@ -4,5 +4,8 @@ pwd
 sim='iphonesimulator'
 flags=" -sdk ${sim}"
 projScheme="-project Microfiche.xcodeproj -scheme Microfiche"
-xcodebuild ${flags} ${projScheme} -destination 'platform=iOS Simulator,name=iPhone 6 Plus' test
-echo "Done"
+xcodebuild \
+  ${flags} \
+  ${projScheme} \
+  -destination 'platform=iOS Simulator,name=iPhone 6,OS=8.2' \
+  test | xcpretty -tc
